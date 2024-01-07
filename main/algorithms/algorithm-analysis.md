@@ -3,6 +3,7 @@ layout: page
 title: Analysis of algorithms
 parent: Algorithms
 math: true
+nav_order: 1
 ---
 
 ## Measuring efficiency
