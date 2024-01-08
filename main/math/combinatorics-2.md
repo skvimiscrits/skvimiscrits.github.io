@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Combinatorics - 1
+title: Combinatorics - 2
 parent: Math
 math: true
 nav_order: 8
