@@ -113,4 +113,37 @@ To find $k$, we first divide the ranges using middle element $m$
 and based on comparison $a_m \lt a_{m+1}$ we can determine whether
 $k$ lies in first half or the second.
 
+## Illustrations
+
+### Illustration 1: Searching in sorted 2D matrix
+
+Find position of $x$ in a $n \times n$ matrix $a$ whose rows
+and columns contain values in sorted order (non-descending)
+or report if it doesn't exist.
+
+#### Solution
+
+We can perform binary search on individual rows
+to solve it in $O(n\lg{n})$.
+But we are not taking advantage of columns also being sorted.
+
+Assume that we are searching for $x$ in some column $c$
+and all columns to right of $c$ have been explored.
+We can try to find $x$ by going *down*. These cases can occur:
+- $x$ is found
+- Some $y \gt x$ occurs (at some row $r$)
+- We reach end of column: in this case $x$ is not present in the matrix.
+
+In the second case, we will start looking for $x$ in column
+$c - 1$. But do we start from top? Given the sorted nature,
+we can start from row $r$ itself.
+
+To summarize:
+- Start from top left cell $(r, c) = (1, n)$
+- Move down the column until one of the following occurs:
+  - $a_{r, c} = x$ then return $(r, c)$.
+  - $a_{r, c} \gt x$, then set $c \leftarrow c - 1$.
+    - If $c \lt 1$ then return not found else repeat.
+  - $r \gt n$ then return not found.
+
 ***

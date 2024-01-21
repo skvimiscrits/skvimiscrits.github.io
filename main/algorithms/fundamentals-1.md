@@ -250,4 +250,160 @@ count be $K$.
 The number of non-negative subarrays is then given by
 $\binom{N}{2} - K$
 
+## Common functions
+
+### Next lesser element
+
+For an integer array $a$ of length $n$,
+define $f_i$ as smallest index greater than $i$
+such that $a_{f_i} \lt a_i$ or $-1$ if it doesn't
+exist.
+
+In simple words: start from $i$ and keep going right
+until we reach some $j$ such that $a_j \lt a_i$.
+
+Compute $f_i$ for each $i$
+
+#### Using an efficient structure
+
+The idea is to process elements in increasing order.
+- For some element $a_i$, no element 
+  $a_j$ such that $a_j \gt a_i$ exists in our structure,
+  we will find the smallest index $k$ such that $k \gt i$.
+- This is not correct because elements $a_j = a_i$ might
+  exist in the structure.
+- To fix that, we process elements having same value together and then insert
+  them into the structure.
+
+We need a structure which allows:
+- Binary search (upper / lower bound)
+- Fast insertion
+
+> Such structures are available as BST based ordered
+> sets allowing these operations in logarithmic time.
+> See `set<T>` in C++ and `TreeSet<T>` in Java.
+
+Assuming the structure allows these operations fast (at most logarithmic time),
+we compute $f$ in $O(n\lg{n})$.
+
+#### Using an efficient algorithm
+
+Suppose we have already computed $f_{i+1}, \ldots, f_{n}$.
+
+While computing $f_{i}$, there can be two cases:
+- $a_i \gt a_{i+1}$
+
+  This results into $f_i = i+1$
+
+- $a_i \le a_{i+1}$
+
+  Let $j = f_{i+1}$. Now it holds that $a_j$ is the
+  first element after $a_{i+1}$ such that $a_j \lt a_{i+1}$.
+  All elements in range $[i+1, j-1]$ are not lesser than $a_{i+1}$,
+  hence they are not lesser than $a_i$. Thus we can skip
+  to $j$ and start from there.
+
+This results into a simple algorithm for computing $f_i$:
+1. Let $j \leftarrow i + 1$
+1. If $j = n + 1$ return $-1$
+1. If $a_j \lt a_i$ return $j$
+1. $j \leftarrow f_j$ and go to step (2)
+
+To find the time complexity, we claim the following:
+
+A transition $j \leftarrow f_j$ in step (4) will
+never be used more than once.
+
+We will show why this is the case.
+Imagine $f_u = v$ as a directed arrow from $u$ to $v$. Can two arrows
+intersect, i.e., for some $u \lt v$ can $u \lt v \lt f_u \lt f_v$?
+- Clearly, $a_u \le a_v$ (because if $a_u \gt a_v$ then $f_u \le v$)
+- It follows that for some $x$, $x \lt a_u \Rightarrow x \lt a_v \Rightarrow f_v \le f_u$
+
+Therefore, such a case will not be possible.
+
+Now, suppose a transition $j \rightarrow f_j$ is used
+in computing some $f_i$ where $i \lt j$. It will
+hold that $f_i \ge f_j$. It can be visualized as:
+$i \rightarrow f_i$ covers $j \rightarrow f_j$ (formally, $i \lt j \lt f_j \le f_i$).
+Given the above claim about intersection, there can never
+exist a transition $k \rightarrow f_k$ where $k \lt i$ and
+$f_k = j$ because it *intersects* $i \rightarrow f_i$.
+
+#### Illustration 1: Largest rectangle in histogram
+
+We are given an integer array $a$ of length $n$ having non-negative values.
+Assuming each index to be a width $1$ bar with height as value, find the
+size of largest rectangle.
+
+Constraints:
+- $1 \le n \le 10^5$
+- $0 \le a_i \le 10^9$
+
+*Solution*
+
+For some index $i$, what can be the maximum area rectangle formed with height $a_i$?
+To obtain the width, We would keep going to right until we reach a height lesser than $a_i$ (similarly for the left side).
+
+Let $f_i$ and $g_i$ be indices of next and previous lesser element than $a_i$.
+Assume $a_0 = a_{n+1} = 0$ for convenience.
+Then the answer is given by:
+
+$$
+\max_{1 \le i \le n}{a_i \cdot (f_i - g_i - 1)}
+$$
+
+#### Illustration 2: Sum of minimum of all subarrays
+
+We are given an array of integers $a$ of length $n$. 
+We need to find:
+
+$$
+\sum_{1 \le i \le j \le n}{\min(a_i, \ldots, a_j)}
+$$
+
+*Solution 1: Using structures*
+
+Let $a_k$ be (one of) the minimum element.
+Then any range $[l, r]$ such that $l \le k \le r$ will
+have $a_k$ as minimum.
+
+This gives us a hint about dividing the range on basis
+of the minimum element.
+
+We can start with range $[1, n]$ and process the element
+in sorted order: possibly splitting the range in which
+an element lies.
+
+If some element $a_k$ is minimum among range $[l, r]$,
+then there will be $(k - l + 1) \cdot (r - k + 1)$ subarrays
+resulting in minimum $a_k$.
+
+For implementation, we can use an ordered set to keep
+the ranges. These operations should be fast:
+- Find and extract range containing $x$
+- Inserting range
+
+*Solution 2: Using the above concept*
+
+For some element $a_i$, we will find the largest range
+in which $a_i$ is the minimum. We can find that
+using next and previous lesser element. Let that
+range be $[l, r]$ ($l \le i \le r$) and we add
+$(i - l + 1) \cdot (r - i + 1) \cdot a_i$ to the answer.
+
+The issue with this approach is multiple counting.
+If for some element $a_i$, the range $[l, r]$ contains
+indices $i_1, \ldots, i_k$ with the same value as $a_i$,
+then:
+- Firstly, for all those elements, the range will be same.
+- Subarrays will be counted multiple times.
+
+To avoid this, we can use the definition *first lesser than
+or equal* element on one of the side (either previous or next).
+
+> If we use this definition on both side, we will undercount
+> because a subarray may contain multiple element having
+> same value as minimum.
+
 ***

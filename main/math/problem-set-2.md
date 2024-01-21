@@ -64,6 +64,22 @@ If $S_n$ is odd, then we can form sum $\lceil \frac{S_n}{2} \rceil$ and
 sum of the rest will be $\lfloor \frac{S_n}{2} \rfloor$. The difference
 will be $1$.
 
+#### Illustration (of above claim)
+
+You are on $x = 0$ on the number line. On move $i$,
+you can move $i$ steps in either direction. Find minimum
+number of moves to reach $x = k$ ($10^{-9} \le k \le 10^{9}$).
+
+Let $S_n$ be sum of first $n$ integers starting from $1$.
+
+It is obvious that we will require a minimum of $n$ moves such that $S_n \ge k$.
+- Also, we can't skip any moves - we will have to move to the opposite side.
+- Let $u$ be that distance, then we should have $S_n = (k + u) + u = k + 2u$.
+  By the above claim, such a $u$ can be formed.
+- We have to find the smallest $n$ such that $S_n$ and $k$ have same parity
+  and $S_n \ge k$.
+
+
 #### Problem
 
 Given a stick of length $n$ (integer). You can make cuts at integer points
