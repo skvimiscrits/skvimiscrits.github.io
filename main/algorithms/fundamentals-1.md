@@ -92,6 +92,38 @@ For convenience we can use $p_0 = 0$. We can then iterate
 from $0$ to $n$, adding frequency of $p_i - x$ to the answer before
 adding $1$ to frequency of $p_i$ in the hash table.
 
+### Illustration 3.1
+
+You are given a 2D matrix of integers and some integer $x$.
+Find number of non-empty sub-matrices having sum equal to $x$.
+
+#### Solution
+
+Prefix sums can be applied to 2D grids too. For a matrix $a$ ($n \times m$), let 
+
+$$
+f_{r,c} = \sum_{1 \le i \le r}\sum_{1 \le j \le c}{a_{i,j}}
+$$
+
+Then, sum of a sub-matrix with top left corner as $(r_1, c_1)$
+and bottom right corner $(r_2, c_2)$ is given by:
+
+$$
+f_{r_2, c_2} - f_{r_1 - 1, c_2} - f_{r_2, c_1 - 1} + f_{r_1 - 1, c_1 -  1}
+$$
+
+Note: Assume $f_{0, i} = f_{i, 0} = 0$ for convenience.
+
+In this way we can find sum of a sub-matrix in $O(1)$ after $O(nm)$ pre-computation.
+We will need to check all possible sub-matrices, so this takes $O(n^2 m^2)$.
+
+There exists a better way following upon the 1D case. Consider
+the sub-matrix from rows $l$ to $r$. We can consider this as
+a 1D array by considering element at index $i$ as $\sum\limits_{l \le j \le r}{a_{j, i}}$.
+This sum can be computed fast if we consider prefix sums in each column.
+Overall, we would need to consider all pairs of $l, r$ to cover
+all possible sub-matrices. This approach has time complexity $O(n^2m)$ (assuming $n \le m$).
+
 ### Illustration 4
 
 You are given an integer array $a$ of length $n$. Find a rotation
