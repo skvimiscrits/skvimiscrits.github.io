@@ -146,4 +146,37 @@ To summarize:
     - If $c \lt 1$ then return not found else repeat.
   - $r \gt n$ then return not found.
 
+### Illustration 2: Find element with order in sorted 2D matrix
+
+Find $k$-th smallest element in a $n \times m$ matrix whose
+rows and columns contain values in sorted order (non-descending).
+
+#### Solution
+
+Define $f_x$ as number of elements not greater than $x$
+in the matrix.
+$f_x$ can be computed in $O(n + m)$ for some $x$ (using
+the method described in the search part above).
+
+Suppose the domain of values in the matrix is $[p, q]$,
+then we can binary search on $f$. What definition should
+be chosen out of the following:
+- Find the smallest $x$ such that $f_x \ge k$
+- Find the largest $x$ such that $f_x \le k$
+
+The second one is not correct because there can be duplicate
+values. Take the following matrix for example:
+
+$$
+\begin{bmatrix}
+1 & 2 \\
+2 & 3
+\end{bmatrix}
+$$
+
+For $k = 2$, what is the largest $x$ such that $f_x \le 2$?
+The answer comes out to be $1$ which is incorrect. This
+is because there are $3$ elements ($1, 2, 2$) not
+greater than $2$ in the matrix.
+
 ***
