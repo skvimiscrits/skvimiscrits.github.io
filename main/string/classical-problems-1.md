@@ -182,6 +182,9 @@ Let's look at a very similar algorithm
 8           j = p[j]
 ```
 
+> Remember $j$ as length of longest suffix of $t_{1, i-1}$
+> which is prefix of $s$.
+
 Here $j$, at start iteration $i$, denotes the
 length of longest prefix of $s$ (but not whole $s$) which also a suffix of $t_{1,i-1}$.
 (or $0$ if $i = 1$).
