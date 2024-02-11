@@ -79,8 +79,8 @@ Implementation hints:
 
       int n = (int)matrix.size(), m = (int)matrix[0].size();
       const int D = 4;
-      vector<pair<int, int>> dir = {{0,1},{1,0},{0,-1},{-1,0}};
-      vector<pair<int, int>> bounds = {{0,m-1},{n-1,m-1},{n-1,0},{0,0}};
+      vector<pair<int, int>> dir = { {0,1},{1,0},{0,-1},{-1,0} };
+      vector<pair<int, int>> bounds = { {0,m-1},{n-1,m-1},{n-1,0},{0,0} };
       pair<int, int> pos = {0, 0};
       for (int i = 0, x = 0; i < n * m; i++) {
         if (pos == bounds[x]) {
