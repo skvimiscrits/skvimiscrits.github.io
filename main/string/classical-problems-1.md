@@ -157,6 +157,52 @@ Note:
 - Due to $0$-indexing, `s[j] != s[i]` is used instead of `s[j + 1] != s[i]`
 - For the same reason, `j = p[j - 1]` instead of `j = p[j]`
 
+#### Illustration 1
+
+Given a string $s$ of length $n$, find if it is formed by
+repeating a (non-empty) string more than once.
+If so, return the smallest possible such string.
+For example, `ababab` is formed by `ab` appended thrice.
+
+*Solution*
+
+Considering the definition of prefix function $P$, $P_n$
+indicates the longest suffix of $s$ which is also a prefix of $s$.
+
+Firstly, if $s$ is formed from some string repeating at least twice,
+it will hold that $2 P_n \ge n$
+
+Now, let $k = n - P_n$.
+
+It holds that:
+*if a prefix of length $k$ is removed from $s$, you get
+$s$ back but with a suffix of length $k$ removed*
+
+Formally, let $m = \lfloor \frac{n}{k} \rfloor$ it holds that:
+
+$$
+s = m \cdot s_{1,k} + s_{1,n-mk}
+$$
+
+for $i \gt k$ where $+$ represents string concatenation
+$a \cdot b$ denotes $b$ appended $m$ times
+
+Thus we can keep removing same prefix (of length $k$)
+from $s$ until one of the following occur:
+- $s$ is empty: we have found the smallest repeating substring.
+- $s$ is non-empty with length less than $k$.
+
+Suppose the answer was prefix of length $x \gt k$ and
+it would hold that $x$ divides $n$.
+Let $x = qk + r$. Notice that:
+- Removing $s_{1,k}$ $q$ times gives $s_{1,n-kq}$
+- Removing $s_{1,r}$ from $s_{1,n-kq}$ gives $s_{1,n-x}$
+- Without proof (TODO), this would mean $s_{1, r}$ is the smallest
+  prefix which forms $s$ on repeating instead of $k$.
+
+To summarize, if $k = n - P_n$ divides $n$ and $2k \le n$
+then $s_{1, k}$ is the shortest repeating substring which forms $s$.
+
 #### String matching using prefix function
 
 Let the given text be string $t$ and pattern to match be $s$.
